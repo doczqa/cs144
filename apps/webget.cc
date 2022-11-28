@@ -8,17 +8,30 @@ using namespace std;
 
 void get_URL(const string &host, const string &path) {
     // Your code here.
+    // const uint16_t portnum = ((std::random_device()()) % 50000) + 1025;
+    Address a = Address(host,"80");
+    TCPSocket sock1;
+    sock1.connect(a);
+    sock1.write("GET "+path+" HTTP/1.1\r\n");
+    sock1.write("Host: "+host+"\r\n");
+    sock1.write("Connection: close\r\n");
+    sock1.write("\r\n");
+    std::string str;
 
+    while((str = sock1.read(100000)) != "") {
+        std::cout<<str;
+    }
+    sock1.close();
+    // std::cout<<a.ip()<<std::endl;
     // You will need to connect to the "http" service on
     // the computer whose name is in the "host" string,
     // then request the URL path given in the "path" string.
-
+    
     // Then you'll need to print out everything the server sends back,
     // (not just one call to read() -- everything) until you reach
     // the "eof" (end of file).
 
     cerr << "Function called: get_URL(" << host << ", " << path << ").\n";
-    cerr << "Warning: get_URL() has not been implemented yet.\n";
 }
 
 int main(int argc, char *argv[]) {
@@ -35,7 +48,7 @@ int main(int argc, char *argv[]) {
             cerr << "\tExample: " << argv[0] << " stanford.edu /class/cs144\n";
             return EXIT_FAILURE;
         }
-
+        // std::cout<<argv[1]<<std::endl;
         // Get the command-line arguments.
         const string host = argv[1];
         const string path = argv[2];
